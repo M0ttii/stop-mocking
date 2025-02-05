@@ -35,15 +35,14 @@ func generateNextMaxID() string {
 
 func FollowersHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Get user_id from query params
+
 		userID := c.Query("user_id")
 		if userID == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "user_id is required"})
 			return
 		}
 
-		// Generate mock followers data
-		users := make([]FollowerUser, 22) // Return 12 followers per page
+		users := make([]FollowerUser, 22)
 		for i := range users {
 			users[i] = FollowerUser{
 				Pk: generateRandomUserID(),
@@ -90,21 +89,19 @@ type BestiesResponse struct {
 
 func BestiesHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Parse the multipart form
-		err := c.Request.ParseMultipartForm(10 << 20) // 10 MB max memory
+
+		err := c.Request.ParseMultipartForm(10 << 20)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Error parsing form data"})
 			return
 		}
 
-		// Get the "add" parameter which contains the user IDs
 		addParam := c.Request.FormValue("add")
 		if addParam == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Missing add parameter"})
 			return
 		}
 
-		// Parse the JSON array of user IDs
 		var userIDs []string
 		err = json.Unmarshal([]byte(addParam), &userIDs)
 		if err != nil {
@@ -112,7 +109,6 @@ func BestiesHandler() gin.HandlerFunc {
 			return
 		}
 
-		// Create friendship statuses for each provided ID
 		friendshipStatuses := make(map[string]FriendshipStatus)
 		for _, userID := range userIDs {
 			friendshipStatuses[userID] = FriendshipStatus{

@@ -10,7 +10,6 @@ import (
 func RunAPI() {
 	r := gin.Default()
 
-	// Configure CORS
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:3000"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
