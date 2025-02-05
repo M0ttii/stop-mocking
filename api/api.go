@@ -10,12 +10,13 @@ import (
 func RunAPI() {
 	r := gin.Default()
 
+	// Configure CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowAllOrigins = true
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	config.AllowHeaders = []string{"*"}  // Allow all headers
 	config.ExposeHeaders = []string{"Content-Length"}
-	config.AllowCredentials = true
+	config.AllowCredentials = false // Must be false when AllowAllOrigins is true
 	r.Use(cors.New(config))
 
 	r.POST("/besties", BestiesHandler())

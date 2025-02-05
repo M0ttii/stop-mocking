@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type FollowerUser struct {
-	Pk int64 `json:"pk"`
+	Pk string `json:"pk"`
 }
 
 type FollowersResponse struct {
@@ -23,8 +24,8 @@ type Follower struct {
 	UserID string `json:"pk"`
 }
 
-func generateRandomUserID() int64 {
-	return rand.Int63n(9000000000) + 1000000000
+func generateRandomUserID() string {
+	return fmt.Sprintf("%d", 62000000000+rand.Int63n(999999999))
 }
 
 func generateNextMaxID() string {
