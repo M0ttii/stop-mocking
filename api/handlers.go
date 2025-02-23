@@ -24,14 +24,62 @@ type Follower struct {
 	UserID string `json:"pk"`
 }
 
+type TrialFollowersResponse struct {
+	Users  []TrialFollower `json:"users"`
+	Status string          `json:"status"`
+}
+
+type TrialFollower struct {
+	UserID        string `json:"pk"`
+	Username      string `json:"username"`
+	FullName      string `json:"full_name"`
+	ProfilePicUrl string `json:"profile_pic_url"`
+}
+
 func generateRandomUserID() string {
 	return fmt.Sprintf("%d", 62000000000+rand.Int63n(999999999))
+}
+
+func generateRandomUsername() string {
+	return fmt.Sprintf("user%d", rand.Int63n(999999999))
+}
+
+func generateRandomFullName() string {
+	return fmt.Sprintf("User %d", rand.Int63n(999999999))
 }
 
 func generateNextMaxID() string {
 	randomBytes := make([]byte, 32)
 	rand.Read(randomBytes)
 	return base64.StdEncoding.EncodeToString(randomBytes)
+}
+
+func TrialFollowersHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		userID := c.Query("user_id")
+		if userID == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "user_id is required"})
+			return
+		}
+
+		users := make([]TrialFollower, 22)
+		for i := range users {
+			users[i] = TrialFollower{
+				UserID:        generateRandomUserID(),
+				Username:      generateRandomUsername(),
+				FullName:      generateRandomFullName(),
+				ProfilePicUrl: "https://i.pravatar.cc/300",
+			}
+		}
+
+		response := TrialFollowersResponse{
+			Users:  users,
+			Status: "ok",
+		}
+
+		c.JSON(http.StatusOK, response)
+	}
 }
 
 func FollowersHandler() gin.HandlerFunc {
